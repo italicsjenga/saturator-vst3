@@ -33,8 +33,8 @@ find_package(JUCE CONFIG REQUIRED)        # If you've installed JUCE to your sys
 
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}\\generated\\FaustEffect.h
-    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}\\Faust\\FaustEffect.dsp
-    COMMAND faust -scn faustdsp -i -a ${CMAKE_CURRENT_SOURCE_DIR}\\Faust\\faustMinimal.h ${CMAKE_CURRENT_SOURCE_DIR}\\Faust\\FaustEffect.dsp -o ${CMAKE_CURRENT_SOURCE_DIR}\\generated\\FaustEffect.h
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\FaustEffect.dsp
+    COMMAND faust -scn faustdsp -i -a ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\faustMinimal.h ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\FaustEffect.dsp -o ${CMAKE_CURRENT_SOURCE_DIR}\\generated\\FaustEffect.h
     VERBATIM
 )
 
