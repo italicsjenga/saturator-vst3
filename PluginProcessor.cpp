@@ -306,10 +306,6 @@ bool AudioPluginAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor *AudioPluginAudioProcessor::createEditor()
 {
-    if (wrapperType == wrapperType_Standalone)
-    {
-        return new juce::GenericAudioProcessorEditor(*this);
-    }
     return nullptr;
 }
 

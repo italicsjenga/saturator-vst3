@@ -1,8 +1,3 @@
-# Example Audio Plugin CMakeLists.txt
-
-# To get started on a new plugin, copy this entire folder (containing this file and C++ sources) to
-# a convenient location, and then start making modifications.
-
 # The first line of any CMake project should be a call to `cmake_minimum_required`, which checks
 # that the installed CMake will be able to understand the following CMakeLists, and ensures that
 # CMake's behaviour is compatible with the named version. This is a standard CMake command, so more
