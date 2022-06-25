@@ -1,4 +1,4 @@
 build/*
 builds/*
 .vscode/*.log
-generated/*
+src/generated/*

@@ -25,13 +25,13 @@ find_package(JUCE CONFIG REQUIRED) # If you've installed JUCE to your system
 # juce_set_vst2_sdk_path(...)
 # juce_set_aax_sdk_path(...)
 add_custom_command(
-    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}\\generated\\FaustEffect.h
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}\\src\\generated\\FaustEffect.h
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\FaustEffect.dsp
-    COMMAND faust -scn faustdsp -i -a ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\faustMinimal.h ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\FaustEffect.dsp -o ${CMAKE_CURRENT_SOURCE_DIR}\\generated\\FaustEffect.h
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_SOURCE_DIR}\\src\\generated && faust -scn faustdsp -i -a ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\faustMinimal.h ${CMAKE_CURRENT_SOURCE_DIR}\\faust\\FaustEffect.dsp -o ${CMAKE_CURRENT_SOURCE_DIR}\\src\\generated\\FaustEffect.h
     VERBATIM
 )
 
-add_custom_target(FaustEffect ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}\\generated\\FaustEffect.h)
+add_custom_target(FaustEffect ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}\\src\\generated\\FaustEffect.h)
 
 # `juce_add_plugin` adds a static library target with the name passed as the first argument
 # (Clipping here). This target is a normal CMake target, but has a lot of extra properties set
@@ -93,7 +93,7 @@ endif()
 # CMake command.
 target_sources(Clipping
     PRIVATE
-    PluginProcessor.cpp)
+    src/PluginProcessor.cpp)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use
