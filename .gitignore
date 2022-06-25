@@ -2,4 +2,3 @@ build/*
 builds/*
 .vscode/*.log
 generated/*
-installer/*

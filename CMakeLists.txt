@@ -60,22 +60,22 @@ juce_add_plugin(Clipping
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_custom_command(
-        OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}\\installer\\install-win.exe
-        DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}\\installer\\installer_win.iss
-        COMMAND iscc ${CMAKE_CURRENT_SOURCE_DIR}\\installer\\installer_win.iss
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}\\installer\\Clipping_Win64.exe
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}\\installer\\installer_win.iss
+        COMMAND iscc ${CMAKE_CURRENT_BINARY_DIR}\\installer\\installer_win.iss
         VERBATIM
     )
 
-    add_custom_target(Installer_Win ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}\\installer\\install-win.exe)
+    add_custom_target(Installer_Win ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}\\installer\\Clipping_Win64.exe)
 
     add_dependencies(Installer_Win Clipping_VST3)
 
     file(READ ${CMAKE_CURRENT_SOURCE_DIR}\\installer-scripts\\installer_win.iss FILE_CONTENTS)
     string(REPLACE "%VERSION%" "${PROJECT_VERSION}" FILE_CONTENTS "${FILE_CONTENTS}")
-    file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}\\installer\\installer_win.iss "${FILE_CONTENTS}")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}\\installer\\installer_win.iss "${FILE_CONTENTS}")
 
     add_custom_command(TARGET Clipping_VST3 POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Clipping_VST3> ${CMAKE_CURRENT_SOURCE_DIR}\\installer\\Clipping.vst3
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Clipping_VST3> ${CMAKE_CURRENT_BINARY_DIR}\\installer\\Clipping.vst3
     )
 endif()
 
