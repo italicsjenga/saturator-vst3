@@ -1,7 +1,7 @@
 [Setup]
 AppName=Clipping
 AppVersion=%VERSION%
-DefaultDirName={cf}\Steinberg\VST3
+DefaultDirName={commoncf64}\Steinberg\VST3
 DefaultGroupName=Clipping
 OutputBaseFilename=Clipping_Win64
  
