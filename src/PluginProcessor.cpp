@@ -7,17 +7,26 @@
 
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
-    : AudioProcessor(BusesProperties()
-#if !JucePlugin_IsMidiEffect
-#if !JucePlugin_IsSynth
-                         .withInput("Input", juce::AudioChannelSet::stereo(), true)
-#endif
-                         .withOutput("Output", juce::AudioChannelSet::stereo(), true)
-#endif
-                         ),
-      juce::AudioProcessorParameter::Listener()
+    : parameters(*this, nullptr, juce::Identifier("Clipping"),
+                 {std::make_unique<juce::AudioParameterFloat>("clipping",
+                                                              "Saturation",
+                                                              0.0f,
+                                                              100.0f,
+                                                              0.0f),
+                  std::make_unique<juce::AudioParameterFloat>("drive",
+                                                              "Drive",
+                                                              0.0f,
+                                                              20.0f,
+                                                              0.0f),
+                  std::make_unique<juce::AudioParameterFloat>("squeeze",
+                                                              "Squeeze",
+                                                              0.0f,
+                                                              20.0f,
+                                                              0.0f)}),
+      AudioProcessor(BusesProperties().withInput("Input", juce::AudioChannelSet::stereo(), true).withOutput("Output", juce::AudioChannelSet::stereo(), true)),
+      juce::AudioProcessorValueTreeState::Listener()
 {
-    addParameter(clipping = new juce::AudioParameterFloat("clipping",   // parameterID
+    /*addParameter(clipping = new juce::AudioParameterFloat("clipping",   // parameterID
                                                           "Saturation", // parameter name
                                                           0.0f,         // minimum value
                                                           100.0f,       // maximum value
@@ -31,16 +40,18 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                                                          "Squeeze",     // parameter name
                                                          0.0f,          // minimum value
                                                          20.0f,         // maximum value
-                                                         0.0f));        // default value
+                                                         0.0f));        // default value*/
     // addParameter(trim = new juce::AudioParameterFloat("trim",           // parameterID
     //                                                   "Trim",           // parameter name
     //                                                   -20.0f,           // minimum value
     //                                                   0.0f,             // maximum value
     //                                                   1.0f));           // default value
-
-    clipping->addListener(this);
-    drive->addListener(this);
-    squeeze->addListener(this);
+    parameters.addParameterListener("clipping", this);
+    parameters.addParameterListener("drive", this);
+    parameters.addParameterListener("squeeze", this);
+    // clipping->addListener(this);
+    // drive->addListener(this);
+    // squeeze->addListener(this);
     // trim->addListener(this);
     // juce::dsp::Oversampling<float> m_oversampling(2, OVERSAMPLE_FACTOR, juce::dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple, true);
 }
@@ -49,29 +60,26 @@ AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
 {
 }
 
-void AudioPluginAudioProcessor::parameterValueChanged(int parameterIndex, float newValue)
+void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID, float newValue)
 {
-    switch (parameterIndex)
+    if (parameterID.compare("clipping") == 0)
     {
-    case 0:
-        clipping_val = newValue;
+        clipping_val = parameters.getParameterRange(parameterID).convertTo0to1(newValue);
         for (int i = 0; i < clipping_dirty.size(); i++)
         {
             clipping_dirty[i] = true;
         }
-        break;
-    case 1:
-        setParam("drive", newValue);
-        break;
-    case 2:
-        setParam("squeeze", newValue);
-        break;
-    case 3:
-        setParam("trim", newValue);
-        break;
-    default:
-        break;
     }
+    else
+    {
+        setParam(parameterID.toStdString(), parameters.getParameterRange(parameterID).convertTo0to1(newValue));
+    }
+    // case "drive":
+    //     setParam("drive", newValue);
+    //     break;
+    // case "squeeze":
+    //     setParam("squeeze", newValue);
+    //     break;
 }
 
 void AudioPluginAudioProcessor::setParam(const std::string &name, float val)
@@ -80,11 +88,6 @@ void AudioPluginAudioProcessor::setParam(const std::string &name, float val)
     {
         fUI[i]->setParamValue(name, val);
     }
-}
-
-void AudioPluginAudioProcessor::parameterGestureChanged(int parameterIndex, bool gestureIsStarting)
-{
-    juce::ignoreUnused(parameterIndex, gestureIsStarting);
 }
 
 //==============================================================================
@@ -312,17 +315,18 @@ juce::AudioProcessorEditor *AudioPluginAudioProcessor::createEditor()
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation(juce::MemoryBlock &destData)
 {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused(destData);
+    auto state = parameters.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation(const void *data, int sizeInBytes)
 {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused(data, sizeInBytes);
+    std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
+
+    if (xmlState.get() != nullptr)
+        if (xmlState->hasTagName(parameters.state.getType()))
+            parameters.replaceState(juce::ValueTree::fromXml(*xmlState));
 }
 
 //==============================================================================

@@ -12,15 +12,14 @@
 class faustdsp;
 class MapUI;
 //==============================================================================
-class AudioPluginAudioProcessor : public juce::AudioProcessor, private juce::AudioProcessorParameter::Listener
+class AudioPluginAudioProcessor : public juce::AudioProcessor, private juce::AudioProcessorValueTreeState::Listener
 {
 public:
     //==============================================================================
     AudioPluginAudioProcessor();
     ~AudioPluginAudioProcessor() override;
 
-    void parameterValueChanged(int parameterIndex, float newValue);
-    void parameterGestureChanged(int parameterIndex, bool gestureIsStarting);
+    void parameterChanged(const juce::String &parameterID, float newValue);
 
     //==============================================================================
     void prepareToPlay(double sampleRate, int samplesPerBlock) override;
@@ -55,13 +54,14 @@ public:
     void setStateInformation(const void *data, int sizeInBytes) override;
 
 private:
-    juce::AudioParameterFloat *clipping;
+    juce::AudioProcessorValueTreeState parameters;
+    // juce::AudioParameterFloat *clipping;
     float clipping_val = 0;
     std::vector<bool> clipping_dirty;
     std::vector<int> signs;
     std::vector<int> prev_signs;
-    juce::AudioParameterFloat *drive;
-    juce::AudioParameterFloat *squeeze;
+    // juce::AudioParameterFloat *drive;
+    // juce::AudioParameterFloat *squeeze;
     // juce::AudioParameterFloat *trim;
     juce::dsp::Oversampling<float> m_oversampling{2, OVERSAMPLE_FACTOR, juce::dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple, true};
     // Faust stuff
