@@ -5,10 +5,6 @@
 #include <vector>
 #include <algorithm>
 
-#define OVERSAMPLE_FACTOR 1
-#define OVERSAMPLE_SCALE pow(2, OVERSAMPLE_FACTOR)
-// #define NUM_CHANNELS 2
-
 class faustdsp;
 class MapUI;
 //==============================================================================
@@ -59,7 +55,6 @@ private:
     std::vector<bool> clipping_dirty;
     std::vector<int> signs;
     std::vector<int> prev_signs;
-    juce::dsp::Oversampling<float> m_oversampling{2, OVERSAMPLE_FACTOR, juce::dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple, true};
     // Faust stuff
     std::vector<MapUI *> fUI;
     std::vector<faustdsp *> fDSP;
