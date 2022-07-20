@@ -4,11 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${vcpkgRoot}/x64-uwp/include",
-                "${vcpkgRoot}/x64-windows/include",
-                "${vcpkgRoot}/x64-windows-static/include",
-                "${vcpkgRoot}/x86-windows/include",
-                "C:\\JUCE\\include\\JUCE-6.1.6\\modules"
+                "C:\\JUCE\\include\\JUCE-7.0.1\\modules"
             ],
             "defines": [
                 "_DEBUG",
