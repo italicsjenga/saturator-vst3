@@ -26,34 +26,9 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
       AudioProcessor(BusesProperties().withInput("Input", juce::AudioChannelSet::stereo(), true).withOutput("Output", juce::AudioChannelSet::stereo(), true)),
       juce::AudioProcessorValueTreeState::Listener()
 {
-    /*addParameter(clipping = new juce::AudioParameterFloat("clipping",   // parameterID
-                                                          "Saturation", // parameter name
-                                                          0.0f,         // minimum value
-                                                          100.0f,       // maximum value
-                                                          0.0f));       // default value
-    addParameter(drive = new juce::AudioParameterFloat("drive",         // parameterID
-                                                       "Drive",         // parameter name
-                                                       0.0f,            // minimum value
-                                                       20.0f,           // maximum value
-                                                       0.0f));          // default value
-    addParameter(squeeze = new juce::AudioParameterFloat("squeeze",     // parameterID
-                                                         "Squeeze",     // parameter name
-                                                         0.0f,          // minimum value
-                                                         20.0f,         // maximum value
-                                                         0.0f));        // default value*/
-    // addParameter(trim = new juce::AudioParameterFloat("trim",           // parameterID
-    //                                                   "Trim",           // parameter name
-    //                                                   -20.0f,           // minimum value
-    //                                                   0.0f,             // maximum value
-    //                                                   1.0f));           // default value
     parameters.addParameterListener("clipping", this);
     parameters.addParameterListener("drive", this);
     parameters.addParameterListener("squeeze", this);
-    // clipping->addListener(this);
-    // drive->addListener(this);
-    // squeeze->addListener(this);
-    // trim->addListener(this);
-    // juce::dsp::Oversampling<float> m_oversampling(2, OVERSAMPLE_FACTOR, juce::dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple, true);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
@@ -74,12 +49,6 @@ void AudioPluginAudioProcessor::parameterChanged(const juce::String &parameterID
     {
         setParam(parameterID.toStdString(), parameters.getParameterRange(parameterID).convertTo0to1(newValue));
     }
-    // case "drive":
-    //     setParam("drive", newValue);
-    //     break;
-    // case "squeeze":
-    //     setParam("squeeze", newValue);
-    //     break;
 }
 
 void AudioPluginAudioProcessor::setParam(const std::string &name, float val)

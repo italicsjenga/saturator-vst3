@@ -55,14 +55,10 @@ public:
 
 private:
     juce::AudioProcessorValueTreeState parameters;
-    // juce::AudioParameterFloat *clipping;
     float clipping_val = 0;
     std::vector<bool> clipping_dirty;
     std::vector<int> signs;
     std::vector<int> prev_signs;
-    // juce::AudioParameterFloat *drive;
-    // juce::AudioParameterFloat *squeeze;
-    // juce::AudioParameterFloat *trim;
     juce::dsp::Oversampling<float> m_oversampling{2, OVERSAMPLE_FACTOR, juce::dsp::Oversampling<float>::FilterType::filterHalfBandFIREquiripple, true};
     // Faust stuff
     std::vector<MapUI *> fUI;
