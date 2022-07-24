@@ -119,6 +119,14 @@ target_compile_definitions(Clipping
 # juce_add_binary_data(AudioPluginData SOURCES ...)
 add_dependencies(Clipping FaustEffect)
 
+if(DEFINED ENV{VST3_DEV_INSTALL})
+    set(vst3_dev_install "$ENV{VST3_DEV_INSTALL}\\Clipping.vst3")
+
+    add_custom_target(Dev_Install COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Clipping_VST3> ${vst3_dev_install})
+
+    add_dependencies(Dev_Install Clipping_VST3)
+endif()
+
 # `target_link_libraries` links libraries and JUCE modules to other libraries or executables. Here,
 # we're linking our executable target to the `juce::juce_audio_utils` module. Inter-module
 # dependencies are resolved automatically, so `juce_core`, `juce_events` and so on will also be
