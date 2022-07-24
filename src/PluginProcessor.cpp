@@ -8,12 +8,7 @@
 //==============================================================================
 AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     : parameters(*this, nullptr, juce::Identifier("Clipping"),
-                 {std::make_unique<juce::AudioParameterFloat>("clipping",
-                                                              "Saturation",
-                                                              0.0f,
-                                                              100.0f,
-                                                              0.0f),
-                  std::make_unique<juce::AudioParameterFloat>("drive",
+                 {std::make_unique<juce::AudioParameterFloat>("drive",
                                                               "Drive",
                                                               0.0f,
                                                               20.0f,
@@ -22,6 +17,16 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                                                               "Squeeze",
                                                               0.0f,
                                                               20.0f,
+                                                              0.0f),
+                  std::make_unique<juce::AudioParameterFloat>("softclip",
+                                                              "Soft Clipping",
+                                                              0.0f,
+                                                              3.0f,
+                                                              0.0f),
+                  std::make_unique<juce::AudioParameterFloat>("clipping",
+                                                              "Saturation",
+                                                              0.0f,
+                                                              100.0f,
                                                               0.0f)}),
       AudioProcessor(BusesProperties().withInput("Input", juce::AudioChannelSet::stereo(), true).withOutput("Output", juce::AudioChannelSet::stereo(), true)),
       juce::AudioProcessorValueTreeState::Listener()
@@ -29,6 +34,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     parameters.addParameterListener("clipping", this);
     parameters.addParameterListener("drive", this);
     parameters.addParameterListener("squeeze", this);
+    parameters.addParameterListener("softclip", this);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor()
