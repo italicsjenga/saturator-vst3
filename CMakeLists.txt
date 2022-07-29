@@ -120,7 +120,7 @@ target_compile_definitions(Clipping
 add_dependencies(Clipping FaustEffect)
 
 if(DEFINED ENV{VST3_DEV_INSTALL})
-    set(vst3_dev_install "$ENV{VST3_DEV_INSTALL}\\Clipping.vst3")
+    set(vst3_dev_install "$ENV{VST3_DEV_INSTALL}/Clipping.vst3")
 
     add_custom_target(Dev_Install COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:Clipping_VST3> ${vst3_dev_install})
 
